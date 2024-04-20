@@ -5,16 +5,18 @@ import { Header } from '../components/Header'
 import { Video } from '../components/Video'
 import { Module } from '../components/Module'
 
-import { useAppDispatch, useAppSelector } from '../store'
-import { loadCourse } from '../store/slices/player'
+import { useStore } from '../store'
 
 export function Player() {
-  const dispatch = useAppDispatch()
-
-  const modules = useAppSelector((state) => state.player.course?.modules)
+  const { course, load } = useStore(store => {
+    return { 
+      course: store.course, 
+      load: store.load 
+    }
+  })
 
   useEffect(() => {
-    dispatch(loadCourse())
+    load()
   }, [])
 
   return (
@@ -34,7 +36,7 @@ export function Player() {
             <Video />
           </div>
           <aside className="w-80 absolute top-0 bottom-0 right-0 border-l divide-y-2 divide-zinc-900 border-zinc-800 bg-zinc-900 overflow-y-scroll scrollbar scrollbar-thin scrollbar-track-zinc-950 scrollbar-thumb-zinc-800">
-            {modules && modules.map((module, index) => (
+            {course?.modules && course.modules.map((module, index) => (
               <Module
                 key={module.id}
                 moduleIndex={index}
